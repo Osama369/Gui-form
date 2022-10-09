@@ -157,6 +157,6 @@ public class Registration{
     }
 
     public static void main(String[] args) {
-        new Registration();
+        new Registration(); // calling the constructor here
     }
 }
