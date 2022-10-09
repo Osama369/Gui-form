@@ -2,10 +2,16 @@ import org.json.simple.JSONObject;
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.FileWriter;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.awt.Color;
 
 public class Registration{
-    JFrame f;
+    JFrame f;  // object of te jframe like panel here
+    Connection con=null;
+    PreparedStatement pr;
     Registration(){
         f = new JFrame("Student Registration form");
         JLabel l1 = new JLabel("Name");
@@ -20,9 +26,13 @@ public class Registration{
         JTextField t2 = new JTextField();
         JTextField t3 = new JTextField();
         JTextField t4 = new JTextField();
+        // buttons 
         JButton b1 = new JButton("Print");
         JButton b2 = new JButton("Save");
         JButton b3= new JButton("Clear");
+        JButton b4= new JButton("Database");
+        JButton b5= new JButton("Fetch data");
+
         JRadioButton male = new JRadioButton("Male");
         JRadioButton female = new JRadioButton("Female");
         JCheckBox c1 = new JCheckBox("Matric");
@@ -55,9 +65,13 @@ public class Registration{
         c4.setBounds(350,350,100,30);
         a1.setBounds(250,400,200,60);
         cb.setBounds(250,480,100,30);
+
         b1.setBounds(150,530,100,30);
         b2.setBounds(300,530,100,30);
         b3.setBounds(450, 530, 100, 30);
+        b4.setBounds(600, 530,100,30);
+        b5.setBounds(750, 530, 100, 30);
+
         male.setActionCommand("Male");
         female.setActionCommand("Female");
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -75,6 +89,8 @@ public class Registration{
                 Qualification += c4.isSelected() ? "Post Graduate" : "";
                 String Address = a1.getText();
                 String Country = cb.getSelectedItem().toString();
+                // print tha values on the another jframe
+
                 new Infromation (name, roll, batch, section, Gender, Qualification, Address, Country);
             }
         });
@@ -125,6 +141,77 @@ public class Registration{
             
         });
 
+        // add database button here
+        b4.addActionListener((ActionListener) new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                // write the code here for database
+                try {
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    con=DriverManager.getConnection("jdbc:mysql://localhost:3306/mydata", "root", "");
+                    // write query here
+                    String query=  "insert into studentinfo values(?,?,?,?,?,?,?,?)";
+                    pr= con.prepareStatement(query);
+                    pr.setString(1, t1.getText());
+                    pr.setString(2, t2.getText());
+                    pr.setString(3, t3.getText());
+                    pr.setString(4, t4.getText());
+                    if (male.isSelected()) {
+                        pr.setString(5,male.getText());
+                    }
+                    else{
+                        pr.setString(5, female.getText());
+                    }
+                    if (c1.isSelected()) {
+                        pr.setString(6, c1.getText());
+                    }
+                    if (c2.isSelected()) {
+                        pr.setString(6, c2.getText());
+                    }
+                    if (c3.isSelected()) {
+                        pr.setString(6, c3.getText());
+                    }
+                    if (c4.isSelected()) {
+                        pr.setString(6, c4.getText());
+                    }
+                   pr.setString(7, a1.getText());
+                   pr.setString(8, cb.getSelectedItem().toString());
+                  // execute query here
+
+                 int i= pr.executeUpdate();
+                      JOptionPane.showMessageDialog(b4,i+" student added successfully");
+                       pr.close(); 
+                       con.close(); 
+                 
+                } catch (Exception e1) {
+                    // TODO: handle exception
+                    e1.printStackTrace();
+                }
+                
+            }
+            
+        });    // close the database button here
+         
+        // fetch data button here
+        b5.addActionListener(new ActionListener(){
+              // override method actionperformed(ActionEvent e)//
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                // write code here to fetch data
+                
+            }
+            
+        });
+
+
+
+
+
+
+        // add the component here
         group.add(male);
         group.add(female);
         f.add(l1);
@@ -150,7 +237,9 @@ public class Registration{
         f.add(b1);
         f.add(b2);
         f.add(b3);
-        f.setSize(600,700);
+        f.add(b4);
+        f.add(b5);
+        f.setSize(1000,700);
         f.setLayout(null);
         f.getContentPane().setBackground(Color.YELLOW);
         f.setVisible(true);  

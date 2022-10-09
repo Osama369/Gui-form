@@ -8,6 +8,7 @@ public class Infromation {
     JFrame f;
     Infromation(String name, String roll, String batch, String section, String Gender, String Qualification, String Address, String Country){
         f = new JFrame();
+        // labels and textfields
         JLabel l1 = new JLabel("Name");
         JLabel l2 = new JLabel("Roll no");
         JLabel l3 = new JLabel("Batch");
@@ -25,7 +26,8 @@ public class Infromation {
         JTextField t7 = new JTextField();
         JTextField t8 = new JTextField();
 
-
+       // textfiled here
+       //set the vlaues here 
         t1.setText(name);
         t2.setText(roll);
         t3.setText(batch);
